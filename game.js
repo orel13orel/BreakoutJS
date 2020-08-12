@@ -25,6 +25,7 @@ var scoreText;
 var gameWon = false;
 var music;
 var hitNois;
+var ballSpeed =-300;
 
 
 function preload() {
@@ -41,6 +42,7 @@ function preload() {
 }
 
 function create() {
+    // background Music
     this.music=this.sound.add('backgroundMusic');
     var musicConfig = {
         mute: false,
@@ -53,7 +55,7 @@ function create() {
     };
     this.music.play(musicConfig);
 
-    //add background
+    //background image
     this.add.image(400,340,'background').setScale(0.9);
 
     //setup the game objects
@@ -68,7 +70,7 @@ function create() {
     //set the ball borders (like in the config borders)
     this.ball.setCollideWorldBounds(true);
 
-    this.ball.setBounce(1, 1.05);
+    this.ball.setBounce(1, 1);
     //remove the border under the player so the ball can fall and the player can lose
     this.physics.world.checkCollision.down = false;
 
@@ -136,7 +138,7 @@ function update() {
         
         if (isGameOver(this.physics.world, this.ball)) {
 
-            //change the game over text(adding score)
+            //change the game over text(and score)
             this.gameOverText = this.add.text(
                 this.physics.world.bounds.width / 2,
                 this.physics.world.bounds.height / 2,
@@ -157,7 +159,7 @@ function update() {
 
                 if (this.input.activePointer.isDown) {
                     gameStarted = true;
-                    this.ball.setVelocityY(-300);
+                    this.ball.setVelocityY(ballSpeed);
                     this.startText.setVisible(false);
                 }
             }
@@ -232,17 +234,27 @@ function isWon(blueBricks, greenBricks, purpleBricks, yellowBricks, redBricks) {
 }
 
 function playerCollision(ball, player) {
-    
-
+    //acclerate the ball on Y axis
+    ballSpeed-=5
+    ball.setVelocityY(ballSpeed);
+    //change the ball velocity on X axis depend on where it hits the player
+    var margin=20;
     var velX = Math.abs(ball.body.velocity.x);
-    if (ball.x < player.x) {
-        ball.setVelocityX(-velX);
+    if (ball.x+margin < player.x) {
+        ball.setVelocityX(-velX*1.1);
+    } else if (ball.x-margin > player.x) {
+        ball.setVelocityX(velX*1.1);
+    }else if (ball.x < player.x) {
+        ball.setVelocityX(-velX*0.9);
     } else {
-        ball.setVelocityX(velX);
+        ball.setVelocityX(velX*0.9);
     }
+
+
 }
 
 function createBricksGroup(name, y, scene) {
+    
     return scene.physics.add.group({
         key: name,
         repeat: 8,

@@ -36,6 +36,7 @@ function preload() {
     this.load.image('brick3', './assets/brick3.png');
     this.load.image('brick4', './assets/brick4.png');
     this.load.image('brick5', './assets/brick5.png');
+    this.load.image('broken', './assets/broken.png');
     this.load.image('background', './assets/background.jpg');
     this.load.audio('hit','./assets/hit.mp3');
     this.load.audio('backgroundMusic', './assets/RetroFunk.mp3');
@@ -134,7 +135,6 @@ function create() {
 function update() {
     
     if (!gameWon) {
-        //updateScore();
         
         if (isGameOver(this.physics.world, this.ball)) {
 
@@ -172,7 +172,17 @@ function isGameOver(world, ball) {
 }
 
 function brickCollision(ball, brick) {
-    brick.destroy();
+     
+         if(brick.getData('damaged')==true){
+            brick.destroy();
+         }else{
+         brick.setDataEnabled();
+         console.log(brick.setData('damaged',true));
+         brick.setTexture('broken');
+        }
+    //brick.setData()
+    //console.log(brick.data);
+    //brick.destroy();
     this.sound.play('hit');
     addScore(brick);
 
@@ -254,7 +264,6 @@ function playerCollision(ball, player) {
 }
 
 function createBricksGroup(name, y, scene) {
-    
     return scene.physics.add.group({
         key: name,
         repeat: 8,
@@ -264,6 +273,7 @@ function createBricksGroup(name, y, scene) {
             y: y,
             stepX: 80
         },
-        setScale: { x: 0.2, y: 0.2 }
+        setScale: { x: 0.2, y: 0.2 },
+        
     });
 }

@@ -18,7 +18,6 @@ var config = {
     },
 
 };
-// var game receives the configuration object (config)
 var game = new Phaser.Game(config);
 var gameStarted = false;
 var score = 0;
@@ -42,10 +41,17 @@ function preload() {
 }
 
 function create() {
-    // this.add.audio('backgroundMusic').play;
-    //music = this.sound.play('backgroundMusic');
-    //hitNois=this.add.audio('hit');
-
+    this.music=this.sound.add('backgroundMusic');
+    var musicConfig = {
+        mute: false,
+        volume:0.5,
+        tune:1,
+        detune:0,
+        seek:0,
+        loop: true,
+        delay: 0
+    };
+    this.music.play(musicConfig);
 
     //add background
     this.add.image(400,340,'background').setScale(0.9);
@@ -226,8 +232,9 @@ function isWon(blueBricks, greenBricks, purpleBricks, yellowBricks, redBricks) {
 }
 
 function playerCollision(ball, player) {
-    var velX = Math.abs(ball.body.velocity.x);
+    
 
+    var velX = Math.abs(ball.body.velocity.x);
     if (ball.x < player.x) {
         ball.setVelocityX(-velX);
     } else {

@@ -32,9 +32,13 @@ function preload() {
     this.load.image('brick3', './assets/brick3.png');
     this.load.image('brick4', './assets/brick4.png');
     this.load.image('brick5', './assets/brick5.png');
+    this.load.image('background', './assets/background.jpg');
 }
 
 function create() {
+    //add background
+    this.add.image(400,340,'background').setScale(0.9);
+
     //setup the game objects
     this.player = this.physics.add.sprite(0, 610, 'paddle').setScale(0.2);
     this.ball = this.physics.add.sprite(0, 575, 'ball').setScale(0.2);

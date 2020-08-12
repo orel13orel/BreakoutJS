@@ -15,7 +15,8 @@ var config = {
         preload: preload,
         create: create,
         update: update
-    }
+    },
+
 };
 // var game receives the configuration object (config)
 var game = new Phaser.Game(config);
@@ -23,6 +24,9 @@ var gameStarted = false;
 var score = 0;
 var scoreText;
 var gameWon = false;
+var music;
+var hitNois;
+
 
 function preload() {
     this.load.image('ball', './assets/ball.png');
@@ -33,9 +37,16 @@ function preload() {
     this.load.image('brick4', './assets/brick4.png');
     this.load.image('brick5', './assets/brick5.png');
     this.load.image('background', './assets/background.jpg');
+    this.load.audio('hit','./assets/hit.mp3');
+    this.load.audio('backgroundMusic', './assets/RetroFunk.mp3');
 }
 
 function create() {
+    // this.add.audio('backgroundMusic').play;
+    //music = this.sound.play('backgroundMusic');
+    //hitNois=this.add.audio('hit');
+
+
     //add background
     this.add.image(400,340,'background').setScale(0.9);
 
@@ -50,6 +61,7 @@ function create() {
 
     //set the ball borders (like in the config borders)
     this.ball.setCollideWorldBounds(true);
+
     this.ball.setBounce(1, 1.05);
     //remove the border under the player so the ball can fall and the player can lose
     this.physics.world.checkCollision.down = false;
@@ -153,6 +165,7 @@ function isGameOver(world, ball) {
 
 function brickCollision(ball, brick) {
     brick.destroy();
+    this.sound.play('hit');
     addScore(brick);
 
     if (ball.body.velocity.x === 0) {
@@ -225,7 +238,7 @@ function playerCollision(ball, player) {
 function createBricksGroup(name, y, scene) {
     return scene.physics.add.group({
         key: name,
-        repeat: 0,
+        repeat: 8,
         immovable: true,
         setXY: {
             x: 80,
